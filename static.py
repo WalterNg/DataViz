@@ -82,7 +82,7 @@ def show_static_page():
             st.write(summary)
 
         with st.expander("Don't know what to plot? See here"):
-            image_path = "choosing_good_chart.jpeg"
+            image_path = "media/charts_options.jpeg"
             image = Image.open(image_path)
             st.image(image)
             
