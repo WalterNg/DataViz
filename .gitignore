@@ -1,1 +1,9 @@
-/.vscode
+
+# IDE 
+.vscode
+
+# Cache
+__pycache__
+
+# Media files
+media

@@ -68,8 +68,8 @@ with col2:
 # Navigation bar
 navigation = option_menu(
     menu_title=None,
-    options=['Interactive', 'Static'],
-    icons=["hand-index-thumb", "image"],
+    options=['Static', 'Interactive'],
+    icons=["image", "hand-index-thumb"],
     default_index=0,
     orientation='horizontal',
     key="main_page_key"
@@ -80,8 +80,8 @@ from interactive import show_interactive_page
 from static import show_static_page
 
 # Page Title
-if navigation == 'Interactive':
+if navigation == "Static":
+    show_static_page()
+elif navigation == 'Interactive':
     # show_interactive_page()
     st.info("Coming soon !")
-elif navigation == "Static":
-    show_static_page()
