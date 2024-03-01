@@ -4,6 +4,10 @@ A web-based application that helps users easily create diverse type of charts fr
 
 ## Demo
 
+
+https://github.com/WalterNg/DataViz/assets/109281401/b274a04b-b81d-4611-930d-a93c1a4308c7
+
+
 ## Getting Started
 
 ### Dependencies
