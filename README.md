@@ -15,7 +15,7 @@ A web-based application that helps users easily create diverse type of charts fr
 ### Executing program
 
 ```
-streamlit run interface.py
+streamlit run main.py
 ```
 
 ## Authors
