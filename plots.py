@@ -33,19 +33,19 @@ class ScatterPlot(Dataset):
             key="hue_" + self.name,
             help="Accept any except categorical and uncountable variables")
         
-        palette = st.selectbox(
+        self.palette = st.selectbox(
             "Palette:", 
             options=list([None] + palette_list), 
             key="palette" + self.name,
             help="Select set of colors you want to display")
         
-        size = st.selectbox(
+        self.size = st.selectbox(
             "Size:", 
             options=list([None] + continuous_categorical_countable_var),
             key="size_" + self.name,
             help="Accept any except categorical and uncountable variables")
         
-        style = st.selectbox(
+        self.style = st.selectbox(
             "Style:", 
             options=list([None] + continuous_categorical_countable_var), 
             key="style_" + self.name,
@@ -54,7 +54,7 @@ class ScatterPlot(Dataset):
     
     def set_advanced(self, variable_container):
         
-        alpha = st.number_input(
+        self.alpha = st.number_input(
             "Opacity:", 
             min_value=0.0, 
             max_value=1.0, 
@@ -63,7 +63,7 @@ class ScatterPlot(Dataset):
             key="alpha_" + self.name,
             help="Default opacity is 1")
         
-        sizes = None
+        self.sizes = None
         sizes_select = st.selectbox(
             "Range of sizes:", 
             options=['auto', 'You choose'], 
@@ -89,13 +89,17 @@ class ScatterPlot(Dataset):
                 key='sizes_upper_' + self.name, 
                 help='Min is 10 and max is 200')
             
-            sizes = (sizes_lower, sizes_upper)
+            self.sizes = (sizes_lower, sizes_upper)
 
-        return alpha, sizes
-    
     def plot(self):
-        fig = plt.figure()
-        ax = sns.scatterplot(data=self.data, x=self.x, y=self.y, hue=self.hue)
+        sns.set_style(self.theme)
+        fig = plt.figure(figsize=self.figsize)
+
+        ax = sns.scatterplot(data=self.data, x=self.x, y=self.y, hue=self.hue,
+                             size=self.size, style=self.style, alpha=self.alpha)
+
+        self.figure_setting(self.xlabel, self.ylabel, self.title)
+
         if self.x is None or self.y is None:
             st.info('Please enter x and y axes !')
         else:

@@ -3,6 +3,7 @@ from streamlit_option_menu import option_menu
 from interactive import show_interactive_page
 from static import show_static_page
 
+st.set_page_config(page_title="Data Visualization",layout='wide')
 # Navigation bar
 navigation = option_menu(
     menu_title=None,

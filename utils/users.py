@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 from utils.checker import is_csv, is_excel
+
 def get_user_chart(list_of_graph):
     user_chart = st.multiselect("Choose your plot:", list_of_graph)
     return user_chart
