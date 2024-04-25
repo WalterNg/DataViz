@@ -9,3 +9,6 @@ def split_tabs():
     tabs = col2.tabs([s.center(whitespace, "\u2001") for s in lstTabs])
 
     return col1, col2, tabs
+
+def add_lineplot():
+    return

@@ -1,12 +1,8 @@
-import numpy as np
 import streamlit as st
-import pandas as pd
-from PIL import Image
-from utils.converter import convert2datetime
 from section import static_page
 from utils.users import get_user_dataset, get_user_chart
 from utils.function import split_tabs
-from plots import ScatterPlot
+from plots import *
 from dataset import Dataset
 from option_list.chart_types import chart_type_list
 
@@ -24,7 +20,7 @@ def show_static_page():
     if file_uploaded:
 
         data = get_user_dataset(file_uploaded)
-        st.write(data)
+        st.dataframe(data)
         dataset = Dataset(data)
         dataset.organize()
         dataset.summary()
@@ -33,10 +29,9 @@ def show_static_page():
         user_charts = get_user_chart(chart_type_list)
 
         for chart in user_charts:
+            col1, col2, tabs = split_tabs()
             if chart == 'Scatter plot':
-                scatter_plot = ScatterPlot(data)
-                col1, col2, tabs = split_tabs()
-
+                scatter_plot = ScatterPlot(dataset.data)
                 with col2:
                     with tabs[0]:
                         scatter_plot.set_axis(variable_container)
@@ -48,3 +43,63 @@ def show_static_page():
                         scatter_plot.set_figure(scatter_plot.name)
                 with col1:
                     scatter_plot.plot()
+
+
+            elif chart == 'Bar chart':
+                bar_plot = BarPlot(dataset.data)
+                with col2:
+                    with tabs[0]:
+                        bar_plot.set_axis(variable_container)
+                    with tabs[1]:
+                        bar_plot.set_style(variable_container)
+                    with tabs[2]:
+                        bar_plot.set_advanced(variable_container)
+                    with tabs[3]:
+                        bar_plot.set_figure(bar_plot.name)
+                with col1:
+                    bar_plot.plot()
+
+
+            elif chart == 'Line chart':
+                line_plot = LinePlot(dataset.data)
+                with col2:
+                    with tabs[0]:
+                        line_plot.set_axis(variable_container)
+                    with tabs[1]:
+                        line_plot.set_style(variable_container)
+                    with tabs[2]:
+                        line_plot.set_advanced(variable_container)
+                    with tabs[3]:
+                        line_plot.set_figure(line_plot.name)
+                with col1:
+                    line_plot.plot()
+
+
+            elif chart == 'Histogram':
+                histogram = Histogram(dataset.data)
+                with col2:
+                    with tabs[0]:
+                        histogram.set_axis(variable_container)
+                    with tabs[1]:
+                        histogram.set_style(variable_container)
+                    with tabs[2]:
+                        histogram.set_advanced(variable_container)
+                    with tabs[3]:
+                        histogram.set_figure(histogram.name)
+                with col1:
+                    histogram.plot()
+
+
+            elif chart == 'Boxplot':
+                boxplot = BoxPlot(dataset.data)
+                with col2:
+                    with tabs[0]:
+                        boxplot.set_axis(variable_container)
+                    with tabs[1]:
+                        boxplot.set_style(variable_container)
+                    with tabs[2]:
+                        boxplot.set_advanced(variable_container)
+                    with tabs[3]:
+                        boxplot.set_figure(boxplot.name)
+                with col1:
+                    boxplot.plot()
