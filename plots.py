@@ -8,6 +8,7 @@ from PIL import Image
 from dataset import Dataset
 
 from utils.converter import convert2datetime
+from utils.function import compute_freq
 from option_list.palette_list import palette_list
 from option_list.colors_list import color_list
 
@@ -585,4 +586,109 @@ class BoxPlot(Dataset):
                 )
 
             self.figure_setting(self.xlabel, self.ylabel, self.title)
+            st.pyplot(fig)
+
+
+class PiePlot(Dataset):
+    def __init__(self, data, name='pie') -> None:
+        super().__init__(data)
+        self.name = name
+        self.data = data
+        
+    def set_axis(self, variable_container):
+        categorical_countable_var = variable_container['categorical_countable_var']
+
+        self.x = None
+        self.labels = None
+        x = st.selectbox(
+            "Choose x-axis:", 
+            list([None] + categorical_countable_var), 
+            key="x_" + self.name, 
+            help='Only accept categorical and countable variables')
+        
+        labels = st.selectbox(
+            'Display label:',
+            options=[True, False],
+            key='label_' + self.name
+        )
+        
+        if x is not None:
+            x_unique = self.data[x].unique()
+            x_freq = compute_freq(x_unique)
+            self.x = list(x_freq.values())
+            if labels:
+                self.labels = list(x_freq.keys())
+            
+        self.autopct = None
+        autopct = st.selectbox(
+            'Display percentage:',
+            options=[True, False],
+            key='autopct_' + self.name,
+            help='Display percentage of each piece. Default to second decimal number'
+        ) 
+        if autopct:
+            self.autopct = '%1.2f%%'
+
+        self.title = st.text_input("Title:", key='title_' + self.name, help='Can be self-defined')
+
+
+    def set_style(self, variable_container): 
+
+        categorical_countable_var = variable_container['categorical_countable_var']
+        
+        self.palette = st.selectbox(
+            "Palette:", 
+            options=list([None] + palette_list), 
+            key="palette_" + self.name,
+            help="Select set of color. This will overide the color property")
+        
+        self.explode = None
+        # explode = st.number_input(
+        #     'Explode by:',
+        #     min_value=0.0,
+        #     max_value=0.5,
+        #     value=0.0,
+        #     step=0.05,
+        #     key='explode_' + self.name,
+        #     help='Explode all pieces of a pie chart.'
+        # )
+        # self.explode = np.ones(len(self.x)) * explode
+       
+        self.shadow = st.selectbox(
+            'Shadow:',
+            options=[False, True],
+            key='shadow_' + self.name
+        )
+
+    def set_advanced(self, variable_container):
+        
+        self.startangle = st.number_input(
+            'Rotate starting angle by:',
+            min_value=0,
+            max_value=360,
+            value=0,
+            step=15,
+            key='startangle_' + self.name,
+            help='Rotate counter-clockwise'
+        )
+        
+    def plot(self):
+        sns.set_style(self.theme)
+        fig = plt.figure(figsize=self.figsize)
+
+        if self.x is None:
+            st.info('Please enter x and y axes !')
+        else:    
+            ax = plt.pie(
+                data=self.data, 
+                x=self.x, 
+                labels=self.labels,
+                autopct=self.autopct,
+                colors=sns.color_palette(self.palette),
+                explode=self.explode,
+                shadow=self.shadow,
+                startangle=self.startangle
+                )
+
+            self.figure_setting(xlabel=None, ylabel=None, title=self.title)
             st.pyplot(fig)

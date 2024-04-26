@@ -25,8 +25,9 @@ class Dataset:
         self.numeric_var_list = self.data.describe().columns.tolist()
         self.categorical_var_list = self.data.columns.difference(self.numeric_var_list).tolist()
         self.datetime_list = [col for col in self.columns if self.data[col].dtype == '<M8[ns]']
+
         COUNTABLE_THRESHOLD = st.sidebar.slider(
-            "Countable threshold:", min_value=1, max_value=30, value=10, 
+            "Countable threshold:", min_value=1, max_value=30, value=15, 
             key="count_threshold", 
             help="By default, countable means less than or equal 10. You can adjust it properly (min is 1 and max is 30)")
     
@@ -124,7 +125,7 @@ class Dataset:
 
         # Legend location
         self.bbox_to_anchor = None
-        legend_loc_list = ['You choose','best','center','upper left', 'upper right', 'lower left', 'lower right','upper center', 'lower center', 'center left', 'center right']
+        legend_loc_list = ['You choose','auto','best','center','upper left', 'upper right', 'lower left', 'lower right','upper center', 'lower center', 'center left', 'center right']
 
         self.legend_loc = st.selectbox(
                 "Legend locate:", 
@@ -132,7 +133,10 @@ class Dataset:
                 index=1, 
                 key="legend_loc_" + name, 
                 help="You can locate legend using coordinate")
-        if self.legend_loc == 'You choose':
+        if self.legend_loc == 'auto':
+            self.legend_loc = None
+            self.bbox_to_anchor = (1.0, 1.0)
+        elif self.legend_loc == 'You choose':
             legend_loc_x = st.number_input(
                 "x coordinate of legend:", 
                 min_value=0.0, max_value=2.0, 

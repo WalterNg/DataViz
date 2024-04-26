@@ -14,7 +14,3 @@ def convert2datetime(data: pd.DataFrame, datetime_var: list):
                 err_date = "Cannot convert this variable into datetime object."
 
     return df_date, err_date
-
-
-def str2int(s):
-    return int(s)

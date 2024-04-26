@@ -103,3 +103,18 @@ def show_static_page():
                         boxplot.set_figure(boxplot.name)
                 with col1:
                     boxplot.plot()
+
+
+            elif chart == 'Pie chart':
+                pie_chart = PiePlot(dataset.data)
+                with col2:
+                    with tabs[0]:
+                        pie_chart.set_axis(variable_container)
+                    with tabs[1]:
+                        pie_chart.set_style(variable_container)
+                    with tabs[2]:
+                        pie_chart.set_advanced(variable_container)
+                    with tabs[3]:
+                        pie_chart.set_figure(pie_chart.name)
+                with col1:
+                    pie_chart.plot()
