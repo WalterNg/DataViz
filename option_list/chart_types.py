@@ -4,12 +4,12 @@ chart_type_list = [
     "Bar chart", 
     "Pie chart", 
     "Boxplot", 
-    "Bubble chart", 
+    # "Bubble chart", 
     "Histogram", 
-    "Violin Plot", 
-    "Joint Plot", 
-    "Heatmap", 
+    # "Violin Plot", 
+    # "Joint Plot", 
+    # "Heatmap", 
     "KDE Plot", 
-    "Contour plot", 
-    "Candlestick Charts"
+    # "Contour plot", 
+    # "Candlestick Charts"
     ]

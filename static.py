@@ -118,3 +118,18 @@ def show_static_page():
                         pie_chart.set_figure(pie_chart.name)
                 with col1:
                     pie_chart.plot()
+
+
+            elif chart == 'KDE Plot':
+                kde_plot = KDEPlot(dataset.data)
+                with col2:
+                    with tabs[0]:
+                        kde_plot.set_axis(variable_container)
+                    with tabs[1]:
+                        kde_plot.set_style(variable_container)
+                    with tabs[2]:
+                        kde_plot.set_advanced(variable_container)
+                    with tabs[3]:
+                        kde_plot.set_figure(kde_plot.name)
+                with col1:
+                    kde_plot.plot()

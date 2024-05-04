@@ -642,18 +642,7 @@ class PiePlot(Dataset):
             key="palette_" + self.name,
             help="Select set of color. This will overide the color property")
         
-        self.explode = None
-        # explode = st.number_input(
-        #     'Explode by:',
-        #     min_value=0.0,
-        #     max_value=0.5,
-        #     value=0.0,
-        #     step=0.05,
-        #     key='explode_' + self.name,
-        #     help='Explode all pieces of a pie chart.'
-        # )
-        # self.explode = np.ones(len(self.x)) * explode
-       
+
         self.shadow = st.selectbox(
             'Shadow:',
             options=[False, True],
@@ -685,10 +674,123 @@ class PiePlot(Dataset):
                 labels=self.labels,
                 autopct=self.autopct,
                 colors=sns.color_palette(self.palette),
-                explode=self.explode,
                 shadow=self.shadow,
                 startangle=self.startangle
                 )
 
             self.figure_setting(xlabel=None, ylabel=None, title=self.title)
+            st.pyplot(fig)
+
+
+class KDEPlot(Dataset):
+    def __init__(self, data, name='kde') -> None:
+        super().__init__(data)
+        self.name = name
+        self.data = data
+        
+    def set_axis(self, variable_container):
+        categorical_countable_var = variable_container['categorical_countable_var']
+        numeric_var = variable_container['numeric_var']
+        self.x = st.selectbox(
+            "Choose x-axis:", 
+            list([None] + categorical_countable_var), 
+            key="x_" + self.name, 
+            help='Only accept categorical and countable variables')
+        
+        self.y = st.selectbox(
+            "Choose y-axis:", 
+            list([None] + numeric_var), 
+            key="y_" + self.name, 
+            help='Only accept numerical variables')
+        
+        self.xlabel = st.text_input("x-label:", self.x, key="xlabel_" + self.name, help='Can be self-defined')
+        self.ylabel = st.text_input("y-label:", self.y, key="ylabel_" + self.name, help='Can be self-defined')
+        self.title = st.text_input("Title:", key='title_' + self.name, help='Can be self-defined')
+
+
+    def set_style(self, variable_container): 
+
+        categorical_countable_var = variable_container['categorical_countable_var']
+
+        self.hue = st.selectbox(
+            label="Hue:", 
+            options=list([None] + categorical_countable_var), 
+            key="hue_" + self.name,
+            help="Accept only Categorical and countable variables")
+        
+        self.palette = st.selectbox(
+            "Palette:", 
+            options=list([None] + palette_list), 
+            key="palette_" + self.name,
+            help="Select set of colors you want to display")
+        
+        self.fill = st.selectbox(
+            'Use fill:',
+            options=[True, False],
+            key='fill_' + self.name,
+            help='If True, use solid bar. If False, use line art.'
+        )
+        
+        self.alpha = st.number_input(
+            "Opacity:", 
+            min_value=0.0, 
+            max_value=1.0, 
+            value=1.0, 
+            step=0.1, 
+            key="alpha_" + self.name,
+            help="Default opacity is 1")
+        
+    def set_advanced(self, variable_container):
+        self.estimator = st.selectbox(
+            label='Estimator of y-axis',
+            options=['mean', 'sum', 'length'],
+            key='estimator_' + self.name,
+            help='Select which function to aggregated.'
+        )
+        if self.estimator == 'mean':
+            self.estimator = np.mean
+        elif self.estimator == 'sum':
+            self.estimator = np.sum
+        elif self.estimator == 'length':
+            self.estimator = len
+
+        self.error_bar = st.selectbox(
+            'Error bar method:',
+            options=[None, 'sd', 'ci', 'se', 'pi'],
+            key='error_bar_' + self.name,
+            help='Name of error bar, most common used is sd and ci'
+        )
+        
+        if self.x is not None:
+            self.order = st.multiselect(
+                'Select order of x-axis:',
+                options=self.data[self.x].unique(),
+                default=self.data[self.x].unique(),
+                key='order_' + self.name,
+                help='Provide the order and appearance of each bar'
+            )
+        else:
+            self.order = st.multiselect(
+                'Select order of x-axis:',
+                options=[],
+                default=None,
+                key='order_' + self.name,
+                help='Provide the order and appearance of each bar'
+            )
+
+    def plot(self):
+        sns.set_style(self.theme)
+        fig = plt.figure(figsize=self.figsize)
+
+        if self.x is None:
+            st.info('Please enter x and y axes !')
+        else:    
+            ax = sns.kdeplot(
+                data=self.data, 
+                x=self.x, 
+                # y=self.y, 
+                hue=self.hue,
+                )
+
+            self.figure_setting(self.xlabel, self.ylabel, self.title)
             st.pyplot(fig)
